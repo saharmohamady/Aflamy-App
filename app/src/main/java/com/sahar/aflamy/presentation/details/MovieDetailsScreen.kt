@@ -1,5 +1,6 @@
 package com.sahar.aflamy.presentation.details
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.MaterialTheme
@@ -7,7 +8,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
@@ -45,7 +45,7 @@ fun MovieDetailsScreen(selectedMovieId: String?) {
 @Composable
 private fun ScreenContent(
     movie: State<MovieDetail?>,
-    getImage: (String?) -> Unit
+    getImage: (String?) -> String
 ) {
     Column(
         modifier = Modifier
@@ -92,37 +92,40 @@ private fun ScreenContent(
     }
 }
 
+@SuppressLint("UnrememberedMutableState")
 @Composable
 @Preview
 fun PreviewLightTheme() {
-    val state = remember {
+    val state =
         mutableStateOf(
             MovieDetail(
                 id = 1,
                 title = "Test Movie",
                 releaseDate = "5/04/2022",
-                overview = "test movie over view"
+                overview = "test movie over view",
+                posterPath = "https://image.tmdb.org/t/p/w300/2Icjry0xdRSNxrtsBR1F47b9r3u.jpg"
             )
         )
-    }
+
     AflamyTheme(darkTheme = false) {
-        ScreenContent(state) { }
+        ScreenContent(state) { url -> "" + url }
     }
 }
+
+@SuppressLint("UnrememberedMutableState")
 @Composable
 @Preview
 fun PreviewDarkTheme() {
-    val state = remember {
-        mutableStateOf(
+    AflamyTheme(darkTheme = true) {
+        val state = mutableStateOf(
             MovieDetail(
                 id = 1,
                 title = "Test Movie",
                 releaseDate = "5/04/2022",
-                overview = "test movie over view"
+                overview = "test movie over view",
+                posterPath = "https://image.tmdb.org/t/p/w300/2Icjry0xdRSNxrtsBR1F47b9r3u.jpg"
             )
         )
-    }
-    AflamyTheme(darkTheme = true) {
-        ScreenContent(state) { }
+        ScreenContent(state) { url -> "" + url }
     }
 }
