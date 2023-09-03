@@ -74,6 +74,7 @@ class MoviesPagingTest {
         job.join()
         job.cancel()
     }
+
     @Test
     fun loadRefresh() = runTest {
         val moviesPaging = MoviesPaging(movieApi)

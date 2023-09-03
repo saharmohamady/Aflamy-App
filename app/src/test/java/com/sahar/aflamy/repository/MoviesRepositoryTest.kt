@@ -54,6 +54,7 @@ class MoviesRepositoryTest {
             )
         }
     }
+
     @After
     fun tearDown() {
         clearAllMocks()
@@ -104,7 +105,7 @@ class MoviesRepositoryTest {
     }
 
     @Test
-    fun `getMoviesList`()= runBlocking {
+    fun `getMoviesList`() = runBlocking {
         val moviesPaging = MoviesPaging(movieApi)
 
         val pager = Pager(

@@ -17,6 +17,6 @@ class GetMoviesListUseCase @Inject constructor(
     }
 
     fun invalidate() {
-         repository.invalidate()
+        repository.invalidate()
     }
 }

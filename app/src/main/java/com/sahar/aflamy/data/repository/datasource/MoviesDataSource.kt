@@ -5,6 +5,7 @@ import com.sahar.aflamy.data.model.config.ImagesConfigurations
 import com.sahar.aflamy.data.model.moviedetails.MovieDetail
 import com.sahar.aflamy.data.model.movieslist.MoviesListItem
 import kotlinx.coroutines.flow.Flow
+
 /**
  * represent all function that app needs to function properly so any repo should provide this
  */

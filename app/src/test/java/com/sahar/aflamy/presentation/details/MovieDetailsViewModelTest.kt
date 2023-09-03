@@ -1,8 +1,8 @@
 package com.sahar.aflamy.presentation.details
 
 import com.sahar.aflamy.data.model.moviedetails.MovieDetail
-import com.sahar.aflamy.domain.GetConfigurationsUseCase
 import com.sahar.aflamy.domain.CoroutineTestRule
+import com.sahar.aflamy.domain.GetConfigurationsUseCase
 import com.sahar.aflamy.domain.GetMovieDetailsUseCase
 import io.mockk.MockKAnnotations
 import io.mockk.clearAllMocks
