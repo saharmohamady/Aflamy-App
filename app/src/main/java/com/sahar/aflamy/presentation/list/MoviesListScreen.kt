@@ -24,6 +24,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.paging.LoadState
+import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
@@ -32,6 +33,9 @@ import com.sahar.aflamy.data.model.movieslist.MoviesListItem
 import com.sahar.aflamy.presentation.router.Screen
 import com.sahar.aflamy.ui.theme.AflamyTheme
 
+/**
+ * Display list of Movies
+ */
 @Composable
 fun MoviesListScreen(navController: NavController) {
 
@@ -44,59 +48,72 @@ fun MoviesListScreen(navController: NavController) {
                 count = movies.itemCount,
                 key = null
             ) { index ->
-                ItemContent(viewModel.getLogoImagePath(movies[index]?.posterPath), movies[index]) {
+                MoviesListScreenContent(
+                    viewModel.getLogoImagePath(movies[index]?.posterPath),
+                    movies[index]
+                ) {
                     onListItemClicked(navController, movies[index]?.id.toString())
                 }
             }
 
         }
-
-        when (movies.loadState.refresh) { //FIRST LOAD
-            is LoadState.Error -> {
-                (movies.loadState.refresh as LoadState.Error).error.message?.let {
-                    ShowToastError(it) { viewModel.invalidate() }
-                }
-            }
-            is LoadState.Loading -> { // Loading UI
-                Column(
-                    modifier = Modifier.fillMaxSize(),
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.Center,
-                ) {
-                    Text(
-                        modifier = Modifier.padding(8.dp),
-                        text = stringResource(R.string.intial_load)
-                    )
-
-                    CircularProgressIndicator(color = MaterialTheme.colors.onSecondary)
-                }
-
-            }
-            else -> {}
-        }
-
-        when (movies.loadState.append) { // Pagination
-            is LoadState.Error -> {
-                (movies.loadState.refresh as LoadState.Error).error.message?.let {
-                    ShowToastError(it) { viewModel.invalidate() }
-                }
-            }
-            is LoadState.Loading -> { // Pagination Loading UI
-                Column(
-                    modifier = Modifier
-                        .fillMaxWidth(),
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.Bottom,
-                ) {
-                    Text(text = stringResource(R.string.load_more))
-                    CircularProgressIndicator(color = MaterialTheme.colors.onSecondary)
-                }
-            }
-            else -> {}
-        }
+        handleLoadingUI(movies, viewModel)
     }
 
 
+}
+
+/**
+ * handle Loading Ui on first Load and on load more
+ */
+@Composable
+private fun handleLoadingUI(
+    movies: LazyPagingItems<MoviesListItem>,
+    viewModel: MoviesListViewModel
+) {
+
+    when (movies.loadState.refresh) {
+        is LoadState.Error -> {
+            (movies.loadState.refresh as LoadState.Error).error.message?.let {
+                ShowToastError(it) { viewModel.invalidate() }
+            }
+        }
+        is LoadState.Loading -> {
+            Column(
+                modifier = Modifier.fillMaxSize(),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center,
+            ) {
+                Text(
+                    modifier = Modifier.padding(8.dp),
+                    text = stringResource(R.string.intial_load)
+                )
+
+                CircularProgressIndicator(color = MaterialTheme.colors.onSecondary)
+            }
+
+        }
+        else -> {}
+    }
+    when (movies.loadState.append) {
+        is LoadState.Error -> {
+            (movies.loadState.refresh as LoadState.Error).error.message?.let {
+                ShowToastError(it) { viewModel.invalidate() }
+            }
+        }
+        is LoadState.Loading -> {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth(),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Bottom,
+            ) {
+                Text(text = stringResource(R.string.load_more))
+                CircularProgressIndicator(color = MaterialTheme.colors.onSecondary)
+            }
+        }
+        else -> {}
+    }
 }
 
 @Composable
@@ -123,7 +140,7 @@ fun onListItemClicked(navController: NavController, movieId: String?) {
 }
 
 @Composable
-private fun ItemContent(
+private fun MoviesListScreenContent(
     url: String?,
     movie: MoviesListItem?,
     onClick: (Int?) -> Unit
