@@ -1,23 +1,29 @@
 package com.sahar.aflamy.repository
 
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
+import androidx.paging.map
+import app.cash.turbine.test
 import com.sahar.aflamy.data.model.config.Images
 import com.sahar.aflamy.data.model.config.ImagesConfigurations
 import com.sahar.aflamy.data.model.moviedetails.MovieDetail
+import com.sahar.aflamy.data.model.movieslist.MoviesListItem
 import com.sahar.aflamy.data.model.movieslist.MoviesListResponse
 import com.sahar.aflamy.data.repository.remote.MovieApi
+import com.sahar.aflamy.data.repository.remote.MoviesPaging
 import com.sahar.aflamy.data.repository.remote.MoviesRepository
 import com.sahar.aflamy.domain.CoroutineTestRule
+import io.mockk.InternalPlatformDsl.toArray
 import io.mockk.MockKAnnotations
 import io.mockk.clearAllMocks
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.impl.annotations.MockK
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.runTest
-import org.junit.After
+import org.junit.*
 import org.junit.Assert.assertEquals
-import org.junit.Before
-import org.junit.Rule
-import org.junit.Test
 
 class MoviesRepositoryTest {
 
@@ -34,8 +40,20 @@ class MoviesRepositoryTest {
         coEvery { movieApi.getMovieDetail("123") } returns MovieDetail(id = 123)
         coEvery { movieApi.getImagesConfigurations() } returns getStubImagesConfigurations()
         coEvery { movieApi.getMovies(any(), any()) } returns getMoviesResponse()
+        coEvery { movieApi.getMovies(1, any()) } returns getMoviesList(1)
+        coEvery { movieApi.getMovies(2, any()) } returns getMoviesList(2)
+
     }
 
+    private fun getMoviesList(page: Int): MoviesListResponse {
+        return MoviesListResponse(page = page).apply {
+            moviesList = arrayListOf(
+                MoviesListItem(id = 1 * page),
+                MoviesListItem(id = 2 * page),
+                MoviesListItem(id = 3 * page)
+            )
+        }
+    }
     @After
     fun tearDown() {
         clearAllMocks()
@@ -83,6 +101,36 @@ class MoviesRepositoryTest {
             val repository = MoviesRepository(movieApi)
             assertEquals(getStubImagesConfigurations(), repository.getImagesConfigurations())
         }
+    }
+
+    @Test
+    fun `getMoviesList`()= runBlocking {
+        val moviesPaging = MoviesPaging(movieApi)
+
+        val pager = Pager(
+            config = PagingConfig(
+                pageSize = 20,
+            ),
+            pagingSourceFactory = {
+                moviesPaging
+            }
+        )
+        val repository = MoviesRepository(movieApi)
+        val job = launch {
+            pager.flow.test {
+                val result = this.awaitItem()
+                result.map { paging ->
+                    Assert.assertArrayEquals(
+                        paging.toArray(),
+                        getMoviesList(1).moviesList.toTypedArray()
+                    )
+                }
+                cancelAndConsumeRemainingEvents()
+            }
+        }
+        repository.getMoviesList()
+        job.join()
+        job.cancel()
     }
 
     private fun getStubImagesConfigurations(): ImagesConfigurations {
