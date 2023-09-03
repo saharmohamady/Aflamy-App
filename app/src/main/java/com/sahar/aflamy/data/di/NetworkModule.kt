@@ -1,15 +1,12 @@
 package com.sahar.aflamy.data.di
 
-import android.content.Context
 import com.sahar.aflamy.BuildConfig
 import com.sahar.aflamy.data.repository.datasource.MoviesDataSource
 import com.sahar.aflamy.data.repository.remote.MovieApi
 import com.sahar.aflamy.data.repository.remote.MoviesRepository
-import com.sahar.aflamy.data.repository.remote.NetworkConnectionInterceptor
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
-import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
@@ -37,7 +34,7 @@ object NetworkModule {
 
     @Singleton
     @Provides
-    fun provideOkHttp(@ApplicationContext appContext: Context): OkHttpClient {
+    fun provideOkHttp(): OkHttpClient {
         val logging = HttpLoggingInterceptor()
         logging.setLevel(HttpLoggingInterceptor.Level.BASIC);
         return OkHttpClient.Builder().apply {
@@ -45,7 +42,6 @@ object NetworkModule {
             readTimeout(60, TimeUnit.SECONDS)
             writeTimeout(60, TimeUnit.SECONDS)
             addInterceptor(logging)
-            addInterceptor(NetworkConnectionInterceptor(appContext))
         }.build()
     }
 
