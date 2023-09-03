@@ -20,6 +20,9 @@ import com.sahar.aflamy.R
 import com.sahar.aflamy.data.model.moviedetails.MovieDetail
 import com.sahar.aflamy.ui.theme.AflamyTheme
 
+/**
+ * Display the full details of [selectedMovieId]
+ */
 @Composable
 fun MovieDetailsScreen(selectedMovieId: String?) {
 

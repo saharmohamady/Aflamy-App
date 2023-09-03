@@ -3,8 +3,11 @@ package com.sahar.aflamy.data.repository.remote
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import com.sahar.aflamy.data.model.movieslist.MoviesListItem
-import com.sahar.aflamy.data.repository.remote.MovieApi
 
+/**
+ * PagingSource for Movies which retrieve data for required page
+ * and keep track of next and previous pages keys
+ */
 class MoviesPaging(
     private val movieApi: MovieApi,
 ) : PagingSource<Int, MoviesListItem>() {

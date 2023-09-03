@@ -10,6 +10,9 @@ import com.sahar.aflamy.presentation.details.MovieDetailsScreen
 import com.sahar.aflamy.presentation.list.MoviesListScreen
 import okhttp3.internal.immutableListOf
 
+/**
+ * This Screen class should have all the possible destinations in App.
+ */
 sealed class Screen(val route: String) {
     object MoviesListScreen : Screen("List")
     object MoviesDetailsScreen : Screen("Details")
@@ -23,8 +26,11 @@ sealed class Screen(val route: String) {
     }
 }
 
+/**
+ * Handle the navigation between app screens
+ */
 @Composable
-fun Navigation() {
+fun MoviesAppNavigation() {
     val navController = rememberNavController()
     NavHost(navController = navController, startDestination = Screen.MoviesListScreen.route) {
 

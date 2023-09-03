@@ -8,6 +8,9 @@ import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query
 
+/**
+ * Retrofit interface with set of functions available
+ */
 interface MovieApi {
 
     @GET("discover/movie")

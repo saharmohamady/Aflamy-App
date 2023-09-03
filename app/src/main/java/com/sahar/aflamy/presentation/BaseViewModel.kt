@@ -1,13 +1,16 @@
 package com.sahar.aflamy.presentation
 
 import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 
+/**
+ * Should handle all common functionalities between app viewModels
+ */
 open class BaseViewModel : ViewModel() {
-
-    protected val _errorState: MutableState<String?> = mutableStateOf(null)
-    val errorState: State<String?> = _errorState
+    /**
+     * Should represent the error happened, null means no error.
+     */
+    val errorState: MutableState<String?> = mutableStateOf(null)
 
 }
