@@ -1,12 +1,10 @@
 package com.sahar.aflamy.presentation.list
 
-import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.Button
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material3.Card
 import androidx.compose.material3.CircularProgressIndicator
@@ -31,6 +29,7 @@ import coil.request.ImageRequest
 import com.sahar.aflamy.R
 import com.sahar.aflamy.data.model.movieslist.MoviesListItem
 import com.sahar.aflamy.presentation.router.Screen
+import com.sahar.aflamy.ui.common.ShowErrorView
 import com.sahar.aflamy.ui.theme.AflamyTheme
 
 /**
@@ -75,7 +74,7 @@ private fun handleLoadingUI(
     when (movies.loadState.refresh) {
         is LoadState.Error -> {
             (movies.loadState.refresh as LoadState.Error).error.message?.let {
-                ShowToastError(it) { viewModel.invalidate() }
+                ShowErrorView(it) { viewModel.invalidate() }
             }
         }
         is LoadState.Loading -> {
@@ -98,7 +97,7 @@ private fun handleLoadingUI(
     when (movies.loadState.append) {
         is LoadState.Error -> {
             (movies.loadState.refresh as LoadState.Error).error.message?.let {
-                ShowToastError(it) { viewModel.invalidate() }
+                ShowErrorView(it) { viewModel.invalidate() }
             }
         }
         is LoadState.Loading -> {
@@ -114,25 +113,6 @@ private fun handleLoadingUI(
         }
         else -> {}
     }
-}
-
-@Composable
-fun ShowToastError(message: String, reLoad: () -> Unit) {
-    Column(
-        modifier = Modifier
-            .fillMaxWidth(),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Bottom,
-    ) {
-        Text(text = stringResource(R.string.no_network))
-        Button(onClick = { reLoad }) {
-            Text(text = stringResource(R.string.try_again))
-        }
-    }
-    Toast.makeText(
-        LocalContext.current, message,
-        Toast.LENGTH_SHORT
-    ).show()
 }
 
 fun onListItemClicked(navController: NavController, movieId: String?) {

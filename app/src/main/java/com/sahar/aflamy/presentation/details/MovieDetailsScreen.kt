@@ -1,6 +1,5 @@
 package com.sahar.aflamy.presentation.details
 
-import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.MaterialTheme
@@ -18,6 +17,7 @@ import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.sahar.aflamy.R
 import com.sahar.aflamy.data.model.moviedetails.MovieDetail
+import com.sahar.aflamy.ui.common.ShowErrorView
 import com.sahar.aflamy.ui.theme.AflamyTheme
 
 /**
@@ -32,17 +32,11 @@ fun MovieDetailsScreen(selectedMovieId: String?) {
         ScreenContent(viewModel.movieDetail) { viewModel.getLogoImagePath(it) }
 
         viewModel.errorState.value?.let {
-            ShowToastError(it)
+            ShowErrorView(it) {
+                selectedMovieId?.let { viewModel.getMovieDetails(selectedMovieId) }
+            }
         }
     }
-}
-
-@Composable
-fun ShowToastError(message: String) {
-    Toast.makeText(
-        LocalContext.current, message,
-        Toast.LENGTH_SHORT
-    ).show()
 }
 
 @Composable
