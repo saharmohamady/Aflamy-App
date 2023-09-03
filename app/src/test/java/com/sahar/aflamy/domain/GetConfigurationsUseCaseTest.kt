@@ -6,6 +6,7 @@ import com.sahar.aflamy.data.repository.datasource.MoviesDataSource
 import io.mockk.MockKAnnotations
 import io.mockk.clearAllMocks
 import io.mockk.coEvery
+import io.mockk.coVerify
 import io.mockk.impl.annotations.MockK
 import junit.framework.Assert.assertEquals
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
@@ -36,12 +37,14 @@ internal class GetConfigurationsUseCaseTest {
 
     @Test
     fun `getLogoImagePath null path`() {
+        coEvery { repository.getImagesConfigurations() } returns null
         configurationsUseCase = GetConfigurationsUseCase(repository, UnconfinedTestDispatcher())
         assertEquals("", configurationsUseCase.getLogoImagePath(null))
     }
 
     @Test
     fun `getLogoImagePath config not loaded yet`() {
+        coEvery { repository.getImagesConfigurations() } returns null
         configurationsUseCase = GetConfigurationsUseCase(repository, UnconfinedTestDispatcher())
         assertEquals("", configurationsUseCase.getLogoImagePath("/2Icjry0xdRSNxrtsBR1F47b9r3u.jpg"))
     }
@@ -58,6 +61,7 @@ internal class GetConfigurationsUseCaseTest {
 
     @Test
     fun `getPosterImagePath config not loaded yet`() {
+        coEvery { repository.getImagesConfigurations() } returns null
         configurationsUseCase = GetConfigurationsUseCase(repository, UnconfinedTestDispatcher())
         assertEquals(
             "",
@@ -73,6 +77,25 @@ internal class GetConfigurationsUseCaseTest {
             "https://image.tmdb.org/t/p/original/2Icjry0xdRSNxrtsBR1F47b9r3u.jpg",
             configurationsUseCase.getPosterImagePath("/2Icjry0xdRSNxrtsBR1F47b9r3u.jpg")
         )
+
+    }
+
+    @Test
+    fun `invalidate when data already loaded do nothing`() {
+        coEvery { repository.getImagesConfigurations() } returns getStubImagesConfigurations()
+
+        configurationsUseCase = GetConfigurationsUseCase(repository, UnconfinedTestDispatcher())
+        configurationsUseCase.invalidate()
+        coVerify(exactly = 1) { repository.getImagesConfigurations() }
+    }
+
+    @Test
+    fun `invalidate when data not loaded load again`() {
+        coEvery { repository.getImagesConfigurations() } returns null
+
+        configurationsUseCase = GetConfigurationsUseCase(repository, UnconfinedTestDispatcher())
+        configurationsUseCase.invalidate()
+        coVerify(exactly = 2) { repository.getImagesConfigurations() }
 
     }
 

@@ -48,4 +48,9 @@ class GetConfigurationsUseCase @Inject constructor(
         }
         return ""
     }
+
+    fun invalidate() {
+        if (imagesConfigurations == null)
+            getImagesConfigurations()
+    }
 }

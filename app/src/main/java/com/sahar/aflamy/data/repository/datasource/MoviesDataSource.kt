@@ -24,7 +24,7 @@ interface MoviesDataSource {
     /**
      * list of configurations required to build full image url
      */
-    suspend fun getImagesConfigurations(): ImagesConfigurations
+    suspend fun getImagesConfigurations(): ImagesConfigurations?
 
     /**
      * Refresh data loaded

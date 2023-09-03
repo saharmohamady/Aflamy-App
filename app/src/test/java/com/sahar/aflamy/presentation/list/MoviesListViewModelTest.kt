@@ -9,13 +9,10 @@ import com.sahar.aflamy.data.model.movieslist.MoviesListItem
 import com.sahar.aflamy.data.model.movieslist.MoviesListResponse
 import com.sahar.aflamy.data.repository.remote.MovieApi
 import com.sahar.aflamy.data.repository.remote.MoviesPaging
-import com.sahar.aflamy.domain.GetConfigurationsUseCase
 import com.sahar.aflamy.domain.CoroutineTestRule
+import com.sahar.aflamy.domain.GetConfigurationsUseCase
 import com.sahar.aflamy.domain.GetMoviesListUseCase
-import io.mockk.MockKAnnotations
-import io.mockk.clearAllMocks
-import io.mockk.coEvery
-import io.mockk.coVerify
+import io.mockk.*
 import io.mockk.impl.annotations.MockK
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
@@ -113,7 +110,9 @@ class MoviesListViewModelTest {
 
     @Test
     fun `invalidate verify correct use case called`() {
-        coEvery { getMoviesListUseCase.invalidate() }
+        every { getMoviesListUseCase.invalidate() } returns Unit
+        every { configurationsUseCase.invalidate() } returns Unit
+
         runBlocking {
             val viewModel = MoviesListViewModel(
                 getMoviesListUseCase = getMoviesListUseCase,
@@ -121,6 +120,7 @@ class MoviesListViewModelTest {
             )
             viewModel.invalidate()
             coVerify { getMoviesListUseCase.invalidate() }
+            coVerify { configurationsUseCase.invalidate() }
         }
     }
 

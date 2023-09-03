@@ -44,9 +44,11 @@ class MoviesListViewModel @Inject constructor(
 
     fun invalidate() {
         try {
+            configurationsUseCase.invalidate()
             getMoviesListUseCase.invalidate()
         } catch (e: Exception) {
             errorState.value = e.message
+            e.printStackTrace()
         }
     }
 }
