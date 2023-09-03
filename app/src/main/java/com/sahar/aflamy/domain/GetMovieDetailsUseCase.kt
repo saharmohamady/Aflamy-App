@@ -6,7 +6,7 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class MovieDetailsUseCase @Inject constructor(
+class GetMovieDetailsUseCase @Inject constructor(
     private val repository: MoviesDataSource
 ) {
 

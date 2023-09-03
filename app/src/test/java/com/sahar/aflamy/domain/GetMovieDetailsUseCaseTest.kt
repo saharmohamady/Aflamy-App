@@ -14,12 +14,12 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 
-class MovieDetailsUseCaseTest {
+class GetMovieDetailsUseCaseTest {
 
     @MockK
     private lateinit var repository: MoviesDataSource
 
-    lateinit var movieDetailsUseCase: MovieDetailsUseCase
+    lateinit var getMovieDetailsUseCase: GetMovieDetailsUseCase
 
     @get:Rule
     val testRule = CoroutineTestRule()
@@ -38,30 +38,30 @@ class MovieDetailsUseCaseTest {
 
     @Test
     fun `getMovieDetails call repo exactly once`() {
-        movieDetailsUseCase = MovieDetailsUseCase(repository)
+        getMovieDetailsUseCase = GetMovieDetailsUseCase(repository)
 
         runTest {
-            movieDetailsUseCase.getMovieDetails("")
+            getMovieDetailsUseCase.getMovieDetails("")
             coVerify(exactly = 1) { repository.getMovieDetails("") }
         }
     }
 
     @Test
     fun `getMovieDetails call repo with same parameter`() {
-        movieDetailsUseCase = MovieDetailsUseCase(repository)
+        getMovieDetailsUseCase = GetMovieDetailsUseCase(repository)
 
         runTest {
-            movieDetailsUseCase.getMovieDetails("testId")
+            getMovieDetailsUseCase.getMovieDetails("testId")
             coVerify(exactly = 1) { repository.getMovieDetails("testId") }
         }
     }
 
     @Test
     fun `getMovieDetails call repo and return same data`() {
-        movieDetailsUseCase = MovieDetailsUseCase(repository)
+        getMovieDetailsUseCase = GetMovieDetailsUseCase(repository)
 
         runTest {
-            assertEquals(getMovieDetailsStub(), movieDetailsUseCase.getMovieDetails("testId"))
+            assertEquals(getMovieDetailsStub(), getMovieDetailsUseCase.getMovieDetails("testId"))
         }
     }
 

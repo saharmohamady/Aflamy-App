@@ -14,12 +14,12 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 
-internal class ConfigurationsUseCaseTest {
+internal class GetConfigurationsUseCaseTest {
 
     @MockK
     private lateinit var repository: MoviesDataSource
 
-    lateinit var configurationsUseCase: ConfigurationsUseCase
+    lateinit var configurationsUseCase: GetConfigurationsUseCase
 
     @get:Rule
     val testRule = CoroutineTestRule()
@@ -36,20 +36,20 @@ internal class ConfigurationsUseCaseTest {
 
     @Test
     fun `getLogoImagePath null path`() {
-        configurationsUseCase = ConfigurationsUseCase(repository, UnconfinedTestDispatcher())
+        configurationsUseCase = GetConfigurationsUseCase(repository, UnconfinedTestDispatcher())
         assertEquals("", configurationsUseCase.getLogoImagePath(null))
     }
 
     @Test
     fun `getLogoImagePath config not loaded yet`() {
-        configurationsUseCase = ConfigurationsUseCase(repository, UnconfinedTestDispatcher())
+        configurationsUseCase = GetConfigurationsUseCase(repository, UnconfinedTestDispatcher())
         assertEquals("", configurationsUseCase.getLogoImagePath("/2Icjry0xdRSNxrtsBR1F47b9r3u.jpg"))
     }
 
     @Test
     fun `getLogoImagePath config loaded`() {
         coEvery { repository.getImagesConfigurations() } returns getStubImagesConfigurations()
-        configurationsUseCase = ConfigurationsUseCase(repository, UnconfinedTestDispatcher())
+        configurationsUseCase = GetConfigurationsUseCase(repository, UnconfinedTestDispatcher())
         assertEquals(
             "https://image.tmdb.org/t/p/w300/2Icjry0xdRSNxrtsBR1F47b9r3u.jpg",
             configurationsUseCase.getLogoImagePath("/2Icjry0xdRSNxrtsBR1F47b9r3u.jpg")
@@ -58,7 +58,7 @@ internal class ConfigurationsUseCaseTest {
 
     @Test
     fun `getPosterImagePath config not loaded yet`() {
-        configurationsUseCase = ConfigurationsUseCase(repository, UnconfinedTestDispatcher())
+        configurationsUseCase = GetConfigurationsUseCase(repository, UnconfinedTestDispatcher())
         assertEquals(
             "",
             configurationsUseCase.getPosterImagePath("/2Icjry0xdRSNxrtsBR1F47b9r3u.jpg")
@@ -68,7 +68,7 @@ internal class ConfigurationsUseCaseTest {
     @Test
     fun getPosterImagePathWhenDataLoaded() {
         coEvery { repository.getImagesConfigurations() } returns getStubImagesConfigurations()
-        configurationsUseCase = ConfigurationsUseCase(repository, UnconfinedTestDispatcher())
+        configurationsUseCase = GetConfigurationsUseCase(repository, UnconfinedTestDispatcher())
         assertEquals(
             "https://image.tmdb.org/t/p/original/2Icjry0xdRSNxrtsBR1F47b9r3u.jpg",
             configurationsUseCase.getPosterImagePath("/2Icjry0xdRSNxrtsBR1F47b9r3u.jpg")

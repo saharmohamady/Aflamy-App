@@ -1,9 +1,9 @@
 package com.sahar.aflamy.presentation.details
 
 import com.sahar.aflamy.data.model.moviedetails.MovieDetail
-import com.sahar.aflamy.domain.ConfigurationsUseCase
+import com.sahar.aflamy.domain.GetConfigurationsUseCase
 import com.sahar.aflamy.domain.CoroutineTestRule
-import com.sahar.aflamy.domain.MovieDetailsUseCase
+import com.sahar.aflamy.domain.GetMovieDetailsUseCase
 import io.mockk.MockKAnnotations
 import io.mockk.clearAllMocks
 import io.mockk.coEvery
@@ -19,10 +19,10 @@ import org.junit.Test
 class MovieDetailsViewModelTest {
 
     @MockK
-    lateinit var configurationsUseCase: ConfigurationsUseCase
+    lateinit var getConfigurationsUseCase: GetConfigurationsUseCase
 
     @MockK
-    lateinit var movieDetailsUseCase: MovieDetailsUseCase
+    lateinit var getMovieDetailsUseCase: GetMovieDetailsUseCase
 
     @get:Rule
     val testRule = CoroutineTestRule()
@@ -39,10 +39,10 @@ class MovieDetailsViewModelTest {
 
     @Test
     fun `getMovieDetail assert no error`() = runBlocking {
-        coEvery { movieDetailsUseCase.getMovieDetails(any()) } returns MovieDetail()
+        coEvery { getMovieDetailsUseCase.getMovieDetails(any()) } returns MovieDetail()
         val viewModel = MovieDetailsViewModel(
-            movieDetailsUseCase = movieDetailsUseCase,
-            configurationsUseCase = configurationsUseCase
+            getMovieDetailsUseCase = getMovieDetailsUseCase,
+            configurationsUseCase = getConfigurationsUseCase
         )
         viewModel.getMovieDetails("test")
         assertNotNull(viewModel.movieDetail.value)
@@ -51,10 +51,10 @@ class MovieDetailsViewModelTest {
     @Test
     fun `getMovieDetail assert returned value`() = runBlocking {
         val movie = MovieDetail()
-        coEvery { movieDetailsUseCase.getMovieDetails(any()) } returns movie
+        coEvery { getMovieDetailsUseCase.getMovieDetails(any()) } returns movie
         val viewModel = MovieDetailsViewModel(
-            movieDetailsUseCase = movieDetailsUseCase,
-            configurationsUseCase = configurationsUseCase
+            getMovieDetailsUseCase = getMovieDetailsUseCase,
+            configurationsUseCase = getConfigurationsUseCase
         )
         viewModel.getMovieDetails("test")
         assertEquals(movie, viewModel.movieDetail.value)
@@ -63,10 +63,10 @@ class MovieDetailsViewModelTest {
     @Test
     fun `getMovieDetail assert No error`() = runBlocking {
         val movie = MovieDetail()
-        coEvery { movieDetailsUseCase.getMovieDetails(any()) } returns movie
+        coEvery { getMovieDetailsUseCase.getMovieDetails(any()) } returns movie
         val viewModel = MovieDetailsViewModel(
-            movieDetailsUseCase = movieDetailsUseCase,
-            configurationsUseCase = configurationsUseCase
+            getMovieDetailsUseCase = getMovieDetailsUseCase,
+            configurationsUseCase = getConfigurationsUseCase
         )
         viewModel.getMovieDetails("test")
         assertNull(viewModel.errorState.value)
@@ -74,14 +74,14 @@ class MovieDetailsViewModelTest {
 
     @Test
     fun `getLogoImagePath verify correct use case called`() {
-        coEvery { configurationsUseCase.getPosterImagePath(any()) } returns "testUrl"
+        coEvery { getConfigurationsUseCase.getPosterImagePath(any()) } returns "testUrl"
         runBlocking {
             val viewModel = MovieDetailsViewModel(
-                movieDetailsUseCase = movieDetailsUseCase,
-                configurationsUseCase = configurationsUseCase
+                getMovieDetailsUseCase = getMovieDetailsUseCase,
+                configurationsUseCase = getConfigurationsUseCase
             )
             viewModel.getLogoImagePath("testUrl")
-            coVerify { configurationsUseCase.getPosterImagePath("testUrl") }
+            coVerify { getConfigurationsUseCase.getPosterImagePath("testUrl") }
         }
     }
 

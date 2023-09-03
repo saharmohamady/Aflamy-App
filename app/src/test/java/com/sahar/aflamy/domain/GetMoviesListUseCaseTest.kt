@@ -19,7 +19,7 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 
-class MoviesListUseCaseTest {
+class GetMoviesListUseCaseTest {
 
     @MockK
     private lateinit var repository: MoviesDataSource
@@ -27,7 +27,7 @@ class MoviesListUseCaseTest {
     @MockK
     private lateinit var movieApi: MovieApi
 
-    lateinit var moviesListUseCase: MoviesListUseCase
+    lateinit var getMoviesListUseCase: GetMoviesListUseCase
 
     @get:Rule
     val testRule = CoroutineTestRule()
@@ -47,20 +47,20 @@ class MoviesListUseCaseTest {
 
     @Test
     fun `moviesListUseCase call repo exactly once`() {
-        moviesListUseCase = MoviesListUseCase(repository)
+        getMoviesListUseCase = GetMoviesListUseCase(repository)
 
         runTest {
-            moviesListUseCase.getMoviesList()
+            getMoviesListUseCase.getMoviesList()
             coVerify(exactly = 1) { repository.getMoviesList() }
         }
     }
 
     @Test
     fun `invalidate call repo exactly once`() {
-        moviesListUseCase = MoviesListUseCase(repository)
+        getMoviesListUseCase = GetMoviesListUseCase(repository)
 
         runTest {
-            moviesListUseCase.invalidate()
+            getMoviesListUseCase.invalidate()
             coVerify(exactly = 1) { repository.invalidate() }
         }
     }

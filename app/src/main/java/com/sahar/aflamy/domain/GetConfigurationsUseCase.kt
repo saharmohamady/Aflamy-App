@@ -9,7 +9,7 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class ConfigurationsUseCase @Inject constructor(
+class GetConfigurationsUseCase @Inject constructor(
     private val repository: MoviesDataSource,
     private val dispatcher: CoroutineDispatcher
 ) {

@@ -4,8 +4,8 @@ import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import com.sahar.aflamy.data.model.movieslist.MoviesListItem
-import com.sahar.aflamy.domain.ConfigurationsUseCase
-import com.sahar.aflamy.domain.MoviesListUseCase
+import com.sahar.aflamy.domain.GetConfigurationsUseCase
+import com.sahar.aflamy.domain.GetMoviesListUseCase
 import com.sahar.aflamy.presentation.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
@@ -13,8 +13,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MoviesListViewModel @Inject constructor(
-    private val moviesListUseCase: MoviesListUseCase,
-    private val configurationsUseCase: ConfigurationsUseCase
+    private val getMoviesListUseCase: GetMoviesListUseCase,
+    private val configurationsUseCase: GetConfigurationsUseCase
 ) : BaseViewModel() {
 
     lateinit var moviesFlow: Flow<PagingData<MoviesListItem>>
@@ -26,10 +26,10 @@ class MoviesListViewModel @Inject constructor(
 
     fun getMoviesList() {
         try {
-            moviesFlow = moviesListUseCase.getMoviesList().cachedIn(viewModelScope)
-            _errorState.value = null
+            moviesFlow = getMoviesListUseCase.getMoviesList().cachedIn(viewModelScope)
+            errorState.value = null
         } catch (e: Exception) {
-            _errorState.value = e.message
+            errorState.value = e.message
         }
     }
 
@@ -37,16 +37,16 @@ class MoviesListViewModel @Inject constructor(
         return try {
             configurationsUseCase.getLogoImagePath(posterPath)
         } catch (e: Exception) {
-            _errorState.value = e.message
+            errorState.value = e.message
             ""
         }
     }
 
     fun invalidate() {
         try {
-            moviesListUseCase.invalidate()
+            getMoviesListUseCase.invalidate()
         } catch (e: Exception) {
-            _errorState.value = e.message
+            errorState.value = e.message
         }
     }
 }

@@ -8,7 +8,7 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class MoviesListUseCase @Inject constructor(
+class GetMoviesListUseCase @Inject constructor(
     private val repository: MoviesDataSource
 ) {
 

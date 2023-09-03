@@ -9,9 +9,9 @@ import com.sahar.aflamy.data.model.movieslist.MoviesListItem
 import com.sahar.aflamy.data.model.movieslist.MoviesListResponse
 import com.sahar.aflamy.data.repository.remote.MovieApi
 import com.sahar.aflamy.data.repository.remote.MoviesPaging
-import com.sahar.aflamy.domain.ConfigurationsUseCase
+import com.sahar.aflamy.domain.GetConfigurationsUseCase
 import com.sahar.aflamy.domain.CoroutineTestRule
-import com.sahar.aflamy.domain.MoviesListUseCase
+import com.sahar.aflamy.domain.GetMoviesListUseCase
 import io.mockk.MockKAnnotations
 import io.mockk.clearAllMocks
 import io.mockk.coEvery
@@ -30,10 +30,10 @@ import org.junit.Test
 class MoviesListViewModelTest {
 
     @MockK
-    lateinit var configurationsUseCase: ConfigurationsUseCase
+    lateinit var configurationsUseCase: GetConfigurationsUseCase
 
     @MockK
-    lateinit var moviesListUseCase: MoviesListUseCase
+    lateinit var getMoviesListUseCase: GetMoviesListUseCase
 
     @MockK
     private lateinit var movieApi: MovieApi
@@ -53,10 +53,10 @@ class MoviesListViewModelTest {
 
     @Test
     fun getMoviesList() {
-        coEvery { moviesListUseCase.getMoviesList() } returns getMoviesListStub()
+        coEvery { getMoviesListUseCase.getMoviesList() } returns getMoviesListStub()
         runBlocking {
             val viewModel = MoviesListViewModel(
-                moviesListUseCase = moviesListUseCase,
+                getMoviesListUseCase = getMoviesListUseCase,
                 configurationsUseCase = configurationsUseCase
             )
             val job = launch {
@@ -76,22 +76,22 @@ class MoviesListViewModelTest {
 
     @Test
     fun `when viewModel initialized verify repo called`() {
-        coEvery { moviesListUseCase.getMoviesList() } returns getMoviesListStub()
+        coEvery { getMoviesListUseCase.getMoviesList() } returns getMoviesListStub()
         runBlocking {
             MoviesListViewModel(
-                moviesListUseCase = moviesListUseCase,
+                getMoviesListUseCase = getMoviesListUseCase,
                 configurationsUseCase = configurationsUseCase
             )
-            coVerify(exactly = 1) { moviesListUseCase.getMoviesList() }
+            coVerify(exactly = 1) { getMoviesListUseCase.getMoviesList() }
         }
     }
 
     @Test
     fun `when viewModel initialized assert null error`() {
-        coEvery { moviesListUseCase.getMoviesList() } returns getMoviesListStub()
+        coEvery { getMoviesListUseCase.getMoviesList() } returns getMoviesListStub()
         runBlocking {
             val viewModel = MoviesListViewModel(
-                moviesListUseCase = moviesListUseCase,
+                getMoviesListUseCase = getMoviesListUseCase,
                 configurationsUseCase = configurationsUseCase
             )
             assertNull(viewModel.errorState.value)
@@ -103,7 +103,7 @@ class MoviesListViewModelTest {
         coEvery { configurationsUseCase.getLogoImagePath(any()) } returns "testUrl"
         runBlocking {
             val viewModel = MoviesListViewModel(
-                moviesListUseCase = moviesListUseCase,
+                getMoviesListUseCase = getMoviesListUseCase,
                 configurationsUseCase = configurationsUseCase
             )
             viewModel.getLogoImagePath("testUrl")
@@ -113,14 +113,14 @@ class MoviesListViewModelTest {
 
     @Test
     fun `invalidate verify correct use case called`() {
-        coEvery { moviesListUseCase.invalidate() }
+        coEvery { getMoviesListUseCase.invalidate() }
         runBlocking {
             val viewModel = MoviesListViewModel(
-                moviesListUseCase = moviesListUseCase,
+                getMoviesListUseCase = getMoviesListUseCase,
                 configurationsUseCase = configurationsUseCase
             )
             viewModel.invalidate()
-            coVerify { moviesListUseCase.invalidate() }
+            coVerify { getMoviesListUseCase.invalidate() }
         }
     }
 
