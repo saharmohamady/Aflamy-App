@@ -3,8 +3,8 @@ This App retrieves list of Movies in addition to some details about it.
 
 To Run the app:
 Please add the following links to your local.properties file
-  API_BASE_URL = "https://api.themoviedb.org/3/"
-  API_KEY = "PLEASE ask for it I will share it private"
+ - API_BASE_URL = "https://api.themoviedb.org/3/"
+ - API_KEY = "PLEASE ask for it I will share it private"
 
 Those are manily the base URL for Movies Api and the access key which is mandatory to be able to access it.
 
